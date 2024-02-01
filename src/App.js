@@ -1,24 +1,35 @@
-import logo from './logo.svg';
+import { useEffect } from 'react';
 import './App.css';
+import Player from './components/Player';
+import Playlist from './components/Playlist';
 
 function App() {
+  const handle = (e) => {
+    e.preventDefault();
+    const req = indexedDB.open("datastore", 1)
+    req.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      db.createObjectStore("datastore", {
+        autoIncrement: true,
+      })
+    }
+    req.onerror = (event) => {
+      console.error(event.target.result)
+    }
+    req.onsuccess = (event) => {
+      const db = event.target.result;
+      console.log(db)
+      const transaction = db.transaction(["datastore"], "readwrite");
+      const obStore = transaction.objectStore("datastore")
+      obStore.add({ 1: e.target.files[0] })
+    }
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <input type="file" name="song" id="song" onChange={(e) => { handle(e) }} />
+      <Playlist />
+      <Player />
+    </>
   );
 }
 
