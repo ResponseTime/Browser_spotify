@@ -1,34 +1,29 @@
-import { useEffect } from 'react';
+import allContext from './context/allContext';
+import { useContext } from 'react';
 import './App.css';
 import Player from './components/Player';
 import Playlist from './components/Playlist';
+import Allcontexts from './context/Allcontexts';
 
 function App() {
+  const context = useContext(allContext)
+  const { audioSrc, setAudioSrc } = context
   const handle = (e) => {
-    e.preventDefault();
-    const req = indexedDB.open("datastore", 1)
-    req.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      db.createObjectStore("datastore", {
-        autoIncrement: true,
-      })
-    }
-    req.onerror = (event) => {
-      console.error(event.target.result)
-    }
-    req.onsuccess = (event) => {
-      const db = event.target.result;
-      console.log(db)
-      const transaction = db.transaction(["datastore"], "readwrite");
-      const obStore = transaction.objectStore("datastore")
-      obStore.add({ 1: e.target.files[0] })
-    }
+    const filereader = new FileReader();
+    filereader.addEventListener('load', () => {
+      const data = filereader.result;
+      setAudioSrc(data)
+      console.log(data)
+    })
+    filereader.readAsDataURL(e.target.files[0])
   }
   return (
     <>
-      <input type="file" name="song" id="song" onChange={(e) => { handle(e) }} />
-      <Playlist />
-      <Player />
+      <Allcontexts>
+        <input type="file" name="song" id="song" onChange={(e) => { handle(e) }} />
+        <Playlist />
+        <Player src={audioSrc} />
+      </Allcontexts>
     </>
   );
 }
