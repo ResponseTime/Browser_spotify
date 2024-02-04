@@ -1,29 +1,18 @@
-import allContext from './context/allContext';
-import { useContext } from 'react';
 import './App.css';
+import { useContext, useEffect } from 'react';
 import Player from './components/Player';
 import Playlist from './components/Playlist';
-import Allcontexts from './context/Allcontexts';
-
+import Upload from './components/Upload';
+import allContext from './context/allContext';
 function App() {
+
   const context = useContext(allContext)
-  const { audioSrc, setAudioSrc } = context
-  const handle = (e) => {
-    const filereader = new FileReader();
-    filereader.addEventListener('load', () => {
-      const data = filereader.result;
-      setAudioSrc(data)
-      console.log(data)
-    })
-    filereader.readAsDataURL(e.target.files[0])
-  }
+  const { audioSrc } = context
   return (
     <>
-      <Allcontexts>
-        <input type="file" name="song" id="song" onChange={(e) => { handle(e) }} />
-        <Playlist />
-        <Player src={audioSrc} />
-      </Allcontexts>
+      <Upload />
+      <Playlist />
+      <Player src={audioSrc} />
     </>
   );
 }
