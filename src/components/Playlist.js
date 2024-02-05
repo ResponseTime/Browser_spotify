@@ -17,6 +17,7 @@ const Playlist = () => {
         req.onerror = (event) => {
             console.error(event.target.result)
         }
+        // eslint-disable-next-line
         req.onsuccess = async (event) => {
             const db = event.target.result
             const transaction = await db.transaction("datastore", "readonly")
@@ -34,9 +35,12 @@ const Playlist = () => {
                 }
             };
         }
+        // eslint-disable-next-line
     }, [globalIndex])
+
     return (
         <div className='playlist-wrapper'>
+            <h1>Your playlist</h1>
             {playlist.map((play) => {
                 return <SongItem key={play.id} item={play} />
             })}

@@ -4,12 +4,14 @@ import Player from './components/Player';
 import Playlist from './components/Playlist';
 import Upload from './components/Upload';
 import allContext from './context/allContext';
+import Alert from './components/Alert';
 function App() {
 
   const context = useContext(allContext)
-  const { audioSrc } = context
+  const { alert, audioSrc } = context
   return (
     <>
+      {alert && <Alert />}
       <Upload />
       <Playlist />
       <Player src={audioSrc} />
